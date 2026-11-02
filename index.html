@@ -91,6 +91,21 @@ button{font:inherit;color:inherit}
 .replycard b{display:block;font-size:15px;font-weight:600}
 .replycard .msg{display:block;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pillbtn{height:40px;padding:0 18px;border-radius:20px;border:0;background:rgba(255,255,255,.1);font-weight:600;font-size:15px;cursor:pointer;flex:none}
+.bomb{display:block;margin:0 0 14px;transform:rotate(-2deg);transform-origin:left center;animation:thump 1.6s ease-in-out infinite}
+.bomb .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:8px 8px 0 0;background:#fff;color:#e11d48;font-size:12.5px;font-weight:700;letter-spacing:.14em}
+.bomb .tag i{width:8px;height:8px;border-radius:50%;background:#e11d48;animation:blink 1s infinite}
+.bomb .hl{display:block;padding:10px 14px;border-radius:0 14px 14px 14px;background:linear-gradient(100deg,#e11d48,#f43f5e 55%,#fb7185);font-size:23px;line-height:1.2;font-weight:700;box-shadow:0 10px 40px rgba(225,29,72,.55)}
+@keyframes thump{0%,100%{transform:rotate(-2deg) scale(1)}8%{transform:rotate(-2deg) scale(1.04)}16%{transform:rotate(-2deg) scale(1)}}
+@keyframes blink{50%{opacity:.25}}
+.live{display:inline-flex;align-items:center;gap:7px;margin-left:6px}
+.live i{width:8px;height:8px;border-radius:50%;background:#ff3b30;animation:blink 1s infinite}
+.drop{position:absolute;top:calc(var(--top) + 58px);left:12px;right:12px;z-index:4;display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:22px;background:rgba(36,36,44,.72);backdrop-filter:blur(24px) saturate(1.4);border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,.45);cursor:pointer;animation:dropin 5.5s ease-in-out 1.2s both}
+.drop .av{width:42px;height:42px}
+.drop .tx{flex:1;min-width:0}
+.drop .top{display:flex;justify-content:space-between;font-size:14.5px}
+.drop .top span{font-size:12.5px;color:var(--muted)}
+.drop .body{font-size:14.5px;color:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@keyframes dropin{0%{opacity:0;transform:translateY(-120%)}8%,88%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-120%)}}
 .dots{position:absolute;left:0;right:0;bottom:calc(92px + var(--bot));display:flex;justify-content:center;gap:6px;z-index:2}
 .dots i{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.3)}
 .dots i.on{width:22px;background:#fff}
@@ -308,7 +323,7 @@ const DEFAULT = {
   active:0, time:"9:41", battery:87, showBar:false, coins:400,
   date:"Monday, November 2", wall:"",
   chars:[
-    {name:"Timothée Chalamet", sim:"Met Gala: After Party", scene:"The Mark Hotel rooftop, 2 AM", players:"55.9K", hue:220, avatar:"", art:"",
+    {name:"Timothée Chalamet", bomb:"Timothée left Kylie for YOU 😳", sim:"Met Gala: After Party", scene:"The Mark Hotel rooftop, 2 AM", players:"55.9K", hue:220, avatar:"", art:"",
      like:72, mood:"😍", unread:2, time:"now",
      notif:"let me take you to dinner tomorrow. just us 🤍",
      chips:["only if you pick the place","what about Kylie?"],
@@ -316,7 +331,7 @@ const DEFAULT = {
      action:"I tell Timothée I'll only go if he cancels on Kylie",
      result:"Timothée cancelled on Kylie. Dinner at 8 🍝", gain:15,
      messages:[{t:"date",x:"TONIGHT"},{t:"them",x:"you left the after party without saying bye 👀"},{t:"me",x:"it was getting late 😅"},{t:"them",x:"let me take you to dinner tomorrow. just us 🤍"},{t:"up",x:"Timothée · likeability +12"}]},
-    {name:"Kylie Jenner", sim:"Calabasas Drama", scene:"Kylie's mansion, the morning after", players:"80.0K", hue:330, avatar:"", art:"",
+    {name:"Kylie Jenner", bomb:"Kylie just found out about you two 💅", sim:"Calabasas Drama", scene:"Kylie's mansion, the morning after", players:"80.0K", hue:330, avatar:"", art:"",
      like:-40, mood:"😤", unread:3, time:"2m",
      notif:"stay away from Timothée.",
      chips:["he invited ME","relax it was just dinner"],
@@ -324,7 +339,7 @@ const DEFAULT = {
      action:"I post the dinner pic on my story and tag Timothée",
      result:"Kylie unfollowed you. The internet is losing it 😳", gain:-20,
      messages:[{t:"them",x:"stay away from Timothée."},{t:"them",x:"I saw the photos from last night 🙂"},{t:"down",x:"Kylie · likeability -25"}]},
-    {name:"Jacob Elordi", sim:"Euphoria: On Set", scene:"Trailer 4, between takes", players:"21.8K", hue:15, avatar:"", art:"",
+    {name:"Jacob Elordi", bomb:"Jacob got caught in YOUR trailer 👀", sim:"Euphoria: On Set", scene:"Trailer 4, between takes", players:"21.8K", hue:15, avatar:"", art:"",
      like:55, mood:"😏", unread:1, time:"5m",
      notif:"be honest… did you come to set for me?",
      chips:["maybe 👀","I came for Zendaya"],
@@ -332,7 +347,7 @@ const DEFAULT = {
      action:"I hide in Jacob's trailer before the director finds us",
      result:"The director caught you both. Jacob took the blame 😮‍💨", gain:10,
      messages:[{t:"them",x:"be honest… did you come to set for me?"},{t:"them",x:"because I'm not leaving till you answer"}]},
-    {name:"Harry Styles", sim:"Love On Tour: Backstage", scene:"Wembley Stadium, 10 minutes before the show", players:"102.3K", hue:280, avatar:"", art:"",
+    {name:"Harry Styles", bomb:"Harry wrote a song about YOU 🎤", sim:"Love On Tour: Backstage", scene:"Wembley Stadium, 10 minutes before the show", players:"102.3K", hue:280, avatar:"", art:"",
      like:80, mood:"🥰", unread:1, time:"12m",
      notif:"I wrote a song about you. you'll hear it tonight 🎤",
      chips:["play it first 🥺","is it about me or your ex?"],
@@ -340,7 +355,7 @@ const DEFAULT = {
      action:"I sneak on stage during the encore",
      result:"Harry pulled you on stage in front of 90,000 people 🎤", gain:20,
      messages:[{t:"them",x:"I wrote a song about you"},{t:"them",x:"don't tell anyone. you'll hear it tonight 🎤"},{t:"up",x:"Harry · likeability +8"}]},
-    {name:"Sabrina Carpenter", sim:"Pop Starlet: Rivals & Romance", scene:"The Green Room at the Grammys", players:"44.1K", hue:45, avatar:"", art:"",
+    {name:"Sabrina Carpenter", bomb:"You just beat Sabrina on the charts 📈", sim:"Pop Starlet: Rivals & Romance", scene:"The Green Room at the Grammys", players:"44.1K", hue:45, avatar:"", art:"",
      like:-15, mood:"😒", unread:0, time:"1h",
      notif:"check the charts babe. you're #2 now 😘",
      chips:["enjoy it while it lasts","collab?"],
@@ -348,7 +363,7 @@ const DEFAULT = {
      action:"I challenge Sabrina to a live duet at the after party",
      result:"The duet went viral. 12M views overnight 📈", gain:25,
      messages:[{t:"them",x:"check the charts babe 😘"},{t:"them",x:"you're #2 now. cute."},{t:"down",x:"Sabrina · likeability -15"}]},
-    {name:"Gojo Satoru", sim:"Jujutsu High: After Class", scene:"Tokyo Jujutsu High, the rooftop", players:"67.4K", hue:190, avatar:"", art:"",
+    {name:"Gojo Satoru", bomb:"Gojo took off the blindfold for you 💀", sim:"Jujutsu High: After Class", scene:"Tokyo Jujutsu High, the rooftop", players:"67.4K", hue:190, avatar:"", art:"",
      like:40, mood:"😎", unread:0, time:"3h",
      notif:"meet me on the roof. I'll go easy on you 😎",
      chips:["you never go easy","bring mochi and I'll come"],
@@ -362,10 +377,13 @@ const DEFAULT = {
 let S = load();
 let editing = false, typingFor = -1;
 let actState = "run", actTimer = null;
+let liveN = 1284, liveTimer = null;   /* "reacting now" counter on the sim card, ticks up while it's on screen */
 
 function load(){
   let s = structuredClone(DEFAULT);
   try{ const raw = localStorage.getItem(KEY); if (raw) s = Object.assign(s, JSON.parse(raw)); }catch(e){}
+  /* saves from before the breaking headline existed get the default one */
+  DEFAULT.chars.forEach(d => { const c = s.chars.find(c => c.name === d.name); if (c && c.bomb == null) c.bomb = d.bomb; });
   return s;
 }
 function save(){
@@ -445,6 +463,8 @@ function ring(v, size=46){
 /* ---------- screens ---------- */
 function feed(){
   const c = C(), i = ci(), more = Math.max(0, S.chars.length-4);
+  /* the next character "texts" you while you look at this sim */
+  const k = (i+1) % S.chars.length, o = S.chars[k];
   return `<div class="screen feed">
     <div class="bgup" data-upload="chars.${i}.art">${media(artOf(c))}</div>
     <div class="shade"></div>
@@ -452,8 +472,13 @@ function feed(){
       <div class="toptabs"><span>Home</span><i></i><span class="on">For You</span></div>
       <div class="topright">${coins()}<button type="button" class="circ" aria-label="Notifications">${I.bell}<span class="red"></span></button></div>
     </div>
+    ${S.chars.length>1 && o.notif && !editing ? `<div class="drop" data-open="${k}">
+      <div class="av" style="${bgImg(avOf(o))}"></div>
+      <div class="tx"><div class="top"><b>${esc(o.name)}</b><span>now</span></div><div class="body">${esc(o.notif)}</div></div>
+    </div>` : ""}
     <div class="fstack">
-      <span class="chip">${I.globe}${E(`chars.${i}.players`, c.players)} playing</span>
+      ${c.bomb || editing ? `<div class="bomb"><span class="tag"><i></i>BREAKING</span>${E(`chars.${i}.bomb`, c.bomb, "span", "hl")}</div>` : ""}
+      <span class="chip">${I.globe}${E(`chars.${i}.players`, c.players)} playing<span class="live"><i></i><span id="live">${liveN.toLocaleString("en-US")}</span> reacting</span></span>
       <div class="cont">CONTINUE</div>
       ${E(`chars.${i}.sim`, c.sim, "h1", "simt")}
       <p class="scene">Scene: ${E(`chars.${i}.scene`, c.scene)}</p>
@@ -583,6 +608,8 @@ function render(){
   $("#backdrop").style.backgroundImage = bd ? cssURL(bd) : "";
   const m = $("#msgs"); if (m) m.scrollTop = m.scrollHeight;
   if (r==="action") runAction(); else clearTimeout(actTimer);
+  clearInterval(liveTimer);
+  if (r==="feed") liveTimer = setInterval(()=>{ liveN += 1 + Math.floor(Math.random()*9); const el=$("#live"); if (el) el.textContent = liveN.toLocaleString("en-US"); }, 700);
   document.querySelectorAll(".scr .go").forEach(b => b.classList.toggle("on", b.dataset.screen===r));
 }
 function runAction(){
@@ -684,6 +711,7 @@ function renderPanel(){
       <div class="two"><div class="fld"><label for="n${k}">Name</label><input id="n${k}" data-bind="chars.${k}.name" value="${esc(c.name)}"></div>
       <div class="fld"><label for="s${k}">Sim title</label><input id="s${k}" data-bind="chars.${k}.sim" value="${esc(c.sim)}"></div></div>
       <div class="fld"><label for="sc${k}">Scene</label><input id="sc${k}" data-bind="chars.${k}.scene" value="${esc(c.scene)}"></div>
+      <div class="fld"><label for="bo${k}">Breaking headline on the sim card (empty = hidden)</label><input id="bo${k}" data-bind="chars.${k}.bomb" value="${esc(c.bomb)}"></div>
       <div class="fld"><label for="nt${k}">Notification / reply card text</label><textarea id="nt${k}" rows="2" data-bind="chars.${k}.notif">${esc(c.notif)}</textarea></div>
       <div class="three">
         <div class="fld"><label for="l${k}">Likeability</label><input id="l${k}" type="number" min="-100" max="100" data-bind="chars.${k}.like" value="${esc(c.like)}"></div>
@@ -754,7 +782,7 @@ panel.addEventListener("click", e => {
   if (d.clear!=null){ S.chars[+d.clear].avatar=""; S.chars[+d.clear].art=""; }
   if (d.bgclear) S[d.bgclear]="";
   if (d.del!=null){ S.chars.splice(+d.del,1); S.active=Math.min(S.active,S.chars.length-1); }
-  if (d.add!=null){ S.chars.push({name:"New character", sim:"New Sim", scene:"Where it all starts", players:"12.4K", hue:Math.floor(Math.random()*360), avatar:"", art:"", like:0, mood:"🙂", unread:1, time:"now", notif:"hey. are you free tonight?", chips:["who's asking?","always 😌"], auto:"good. I'll text you the address", action:"I show up without telling anyone", result:"Everyone saw you two leave together 👀", gain:10, messages:[{t:"them", x:"hey. are you free tonight?"}]}); S.active=S.chars.length-1; }
+  if (d.add!=null){ S.chars.push({name:"New character", bomb:"Everyone is talking about you two 👀", sim:"New Sim", scene:"Where it all starts", players:"12.4K", hue:Math.floor(Math.random()*360), avatar:"", art:"", like:0, mood:"🙂", unread:1, time:"now", notif:"hey. are you free tonight?", chips:["who's asking?","always 😌"], auto:"good. I'll text you the address", action:"I show up without telling anyone", result:"Everyone saw you two leave together 👀", gain:10, messages:[{t:"them", x:"hey. are you free tonight?"}]}); S.active=S.chars.length-1; }
   if (d.mdel!=null) C().messages.splice(+d.mdel,1);
   if (d.madd){ const nm = first(C()); C().messages.push({them:{t:"them",x:"New message"}, me:{t:"me",x:"Your reply"}, up:{t:"up",x:nm+" · likeability +5"}, down:{t:"down",x:nm+" · likeability -5"}, narr:{t:"narr",x:nm+" looks at you and smiles"}}[d.madd]); }
   if (d.import!=null){ try{ const n = JSON.parse($("#io").value); if (!n.chars) throw 0; S = Object.assign(structuredClone(DEFAULT), n); toast("Version loaded"); }catch(err){ return toast("That code isn't valid. Copy the full code with Copy code."); } }
