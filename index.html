@@ -23,6 +23,8 @@
   --red:#ff5a5f;
   --blue:#0a84ff;
   --coin:#3b6cf6;
+  --gold:#e8b25e;   /* brand accents, taken from the World Sims logo */
+  --amber:#c27a3a;
   --text:#ffffff;
   --muted:rgba(255,255,255,.6);
   --line:rgba(255,255,255,.10);
@@ -54,7 +56,12 @@ button{font:inherit;color:inherit}
 
 /* ---------- brand ---------- */
 .logo{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
-.logo .gl{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;background:linear-gradient(140deg,#4ade80,#3b6cf6)}
+.logo .gl{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center}
+.logo > span:last-child{letter-spacing:.04em;font-weight:700}
+/* every brand tile shows the real logo */
+.gl,.vgl{background:#2a1d12 url(img/logo.png) center/cover!important}
+.gl svg,.vgl svg{display:none}
+.ctgl{display:inline-block;width:16px;height:16px;border-radius:5px;vertical-align:-3px}
 .logo.sm{font-size:13px;gap:6px}.logo.sm .gl{width:20px;height:20px;border-radius:6px}
 .coins{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border-radius:20px;background:rgba(20,20,26,.78);border:1px solid var(--line);backdrop-filter:blur(12px);font-weight:600;font-size:17px}
 .coin{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#7aa0ff,var(--coin) 60%,#2a4fc4)}
@@ -264,13 +271,13 @@ button{font:inherit;color:inherit}
 .x2{width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.35);cursor:pointer;font-size:15px}
 .cap{position:absolute;left:16px;right:16px;bottom:calc(150px + var(--bot));z-index:3;text-align:center;font:800 32px/1.12 var(--ui);text-transform:uppercase;letter-spacing:-.01em;color:#fff;-webkit-text-stroke:6px #000;paint-order:stroke fill;filter:drop-shadow(0 4px 10px rgba(0,0,0,.45))}
 .cap span{display:inline-block}
-.cap span.on{color:var(--green);animation:pop .16s ease-out}
+.cap span.on{color:var(--gold);animation:pop .16s ease-out}
 .wm{position:absolute;right:14px;bottom:calc(96px + var(--bot));z-index:3;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:13px;background:rgba(0,0,0,.35);font-size:12.5px;font-weight:600;opacity:.9}
-.endc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(80% 50% at 50% 45%,#13241a 0,#050507 70%);animation:rin .4s ease-out}
+.endc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(80% 50% at 50% 45%,#2a1c10 0,#050507 70%);animation:rin .4s ease-out}
 .ebig{display:flex;align-items:center;gap:12px;font-size:40px;font-weight:700;letter-spacing:-.02em}
-.ebig .gl{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(140deg,#4ade80,#3b6cf6);box-shadow:0 10px 40px rgba(74,222,128,.35)}
+.ebig .gl{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(140deg,#4ade80,#3b6cf6);box-shadow:0 10px 40px rgba(194,122,58,.45)}
 .endc p{margin:0;font-size:17px;color:var(--muted)}
-.eurl{margin-top:6px;padding:12px 26px;border-radius:24px;background:var(--green);color:#04130a;font-weight:700;font-size:18px}
+.eurl{margin-top:6px;padding:12px 26px;border-radius:24px;background:linear-gradient(100deg,var(--gold),var(--amber));color:#1a1006;font-weight:700;font-size:18px}
 .erp{position:absolute;bottom:calc(30px + var(--bot));border:0;background:none;color:var(--muted);font-size:14px;cursor:pointer}
 
 /* ---------- incoming call ---------- */
@@ -335,9 +342,9 @@ button{font:inherit;color:inherit}
 .living .pn.dim{filter:grayscale(.6) brightness(.5)}
 .living .pn.on{transform:scale(1.04);z-index:2;box-shadow:0 10px 40px rgba(0,0,0,.6)}
 .living .pn.on .pimg{animation:kb 8s ease-in-out infinite alternate}
-.alivebtn{position:absolute;left:24px;right:24px;bottom:calc(26px + var(--bot));height:56px;border-radius:28px;border:0;background:linear-gradient(100deg,#4ade80,#3b6cf6);color:#04130a;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 10px 40px rgba(74,222,128,.35);animation:glow 2s ease-in-out infinite;transition:opacity .3s}
+.alivebtn{position:absolute;left:24px;right:24px;bottom:calc(26px + var(--bot));height:56px;border-radius:28px;border:0;background:linear-gradient(100deg,var(--gold),var(--amber));color:#1a1006;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 10px 40px rgba(194,122,58,.4);animation:glow 2s ease-in-out infinite;transition:opacity .3s}
 .alivebtn.gone{opacity:0;pointer-events:none}
-@keyframes glow{50%{transform:scale(1.03);box-shadow:0 10px 50px rgba(74,222,128,.6)}}
+@keyframes glow{50%{transform:scale(1.03);box-shadow:0 10px 50px rgba(232,178,94,.6)}}
 
 /* ---------- editing ---------- */
 .editing [data-edit]{outline:1.5px dashed rgba(74,222,128,.7);outline-offset:2px;border-radius:6px;cursor:text}
@@ -416,7 +423,7 @@ textarea.io{width:100%;min-height:90px;background:#0b0b10;border:1px solid var(-
    OWNER ONLY: brand name. Creators never see this in the panel; it can
    only be changed by editing this file.
 ================================================================== */
-const BRAND = { name: "World Sims" };
+const BRAND = { name: "PLUTUS.GG" };
 /* ================================================================ */
 
 const KEY = "worldsims-studio-v1";
@@ -822,7 +829,7 @@ function callView(){
   const c = C(), i = ci();
   return `<div class="screen callin">
     <div class="bgup" data-upload="chars.${i}.art">${media(artOf(c))}</div><div class="cveil"></div>
-    <div class="ctop"><small>${GLOBE(13)} ${esc(BRAND.name)} video call</small>${E(`chars.${i}.name`, c.name, "h2")}<p>is calling you…</p></div>
+    <div class="ctop"><small><span class="gl ctgl"></span> ${esc(BRAND.name)} video call</small>${E(`chars.${i}.name`, c.name, "h2")}<p>is calling you…</p></div>
     <div class="cring"><div class="av" data-upload="chars.${i}.avatar" style="${bgImg(avOf(c))}"></div></div>
     <div class="cbtns">
       <div><button type="button" class="dec" data-decline aria-label="Decline">${I.phone}</button>Decline</div>
@@ -914,7 +921,7 @@ function endCard(c){
   over.innerHTML = `<div class="endc">
     <div class="ebig"><span class="gl">${GLOBE(36)}</span>${esc(BRAND.name)}</div>
     <p>Talk to ${esc(c.name)} now</p>
-    <div class="eurl">${esc(S.site)}</div>
+    <div class="eurl">Play now</div>
     <button type="button" class="erp" data-close-over>Back</button>
   </div>`;
 }
