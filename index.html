@@ -508,6 +508,40 @@ const DEFAULT = {
 };
 const NEW_KEYS = ["bomb","voice","vmAsk","vm","call","comic"];
 
+/* One link per hook in the brief: #h-<id> opens that screen with that character
+   and the lines written for that hook. Nothing here is saved to the browser, so
+   every creator who opens the link sees exactly this. */
+const HOOKS = {
+  /* video message: "… sent me THIS" */
+  "jacob-read":     {screen:"video", char:"Jacob Elordi", vmAsk:"",
+                     messages:[{t:"them",x:"are you coming to set today?"},{t:"them",x:"hello??"},{t:"date",x:"2 DAYS LATER"}],
+                     vm:"two days. you left me on read for two days. I've been sitting in my trailer checking my phone like an idiot. call me back. now"},
+  "kylie-dinner":   {screen:"video", char:"Kylie Jenner", vmAsk:"I went to dinner with Timothée last night 🤭",
+                     vm:"oh you went to dinner with Timothée? cute. enjoy it babe, because I always get what I want. always"},
+  "harry-show":     {screen:"video", char:"Harry Styles", vmAsk:"good luck tonight!! 🥺",
+                     vm:"five minutes before the show and all I can think about is you. front row, okay? the last song is yours, love"},
+  "joker-stop":     {screen:"video", char:"Joker", vmAsk:"please stop texting me 😭",
+                     vm:"stop texting you? oh sweetheart, you don't get to stop. why so serious? see you tonight, partner"},
+  "gojo-training":  {screen:"video", char:"Gojo Satoru", vmAsk:"not coming to training today 😴",
+                     vm:"skipping training again? I can see you from here, you know. roof. five minutes. I'll go easy on you. maybe"},
+  /* incoming call */
+  "joker-3am":      {screen:"call", char:"Joker",
+                     call:"surprise! it's three a.m., did I wake you? don't hang up… I'm right outside your window"},
+  "timothee-calls": {screen:"call", char:"Timothée Chalamet",
+                     call:"you're ignoring my texts, so now I'm calling. dinner tomorrow at eight. I'm not asking twice"},
+  "jacob-set":      {screen:"call", char:"Jacob Elordi",
+                     call:"hey, I'm on set, I've got two minutes. I just wanted to see your face. okay they're calling me, don't go anywhere"},
+  "sabrina-bf":     {screen:"call", char:"Sabrina Carpenter",
+                     call:"hiii, wake up babe! it's Sabrina. your girlfriend has amazing taste, by the way. okay bye"},
+  "harry-bday":     {screen:"call", char:"Harry Styles",
+                     call:"happy birthday! I know it's five a.m., sorry. I just wanted to be the first one to say it. now go back to sleep, love"},
+  /* comic that comes alive */
+  "comic-talking":  {screen:"comic", char:"Jacob Elordi", comic:["wait… you made me in 2 minutes?","and now I can TALK?","okay. page 2. now"]},
+  "comic-joker":    {screen:"comic", char:"Joker", comic:["why is my comic talking to you?","because I wanted to, partner","now turn the page… if you dare"]},
+  "comic-alive":    {screen:"comic", char:"Harry Styles", comic:["you turned our story into a comic","and now it's alive","let's write page 2 together, love"]},
+  "comic-fanfic":   {screen:"comic", char:"Timothée Chalamet", comic:["your fanfic, but I'm actually in it","you wrote me leaving Kylie?","…fine. I'm all yours"]}
+};
+
 let S = load();
 let editing = false, typingFor = -1;
 let actState = "run", actTimer = null;
@@ -532,8 +566,10 @@ function save(){
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function setP(o,p,v){ const ks=p.split("."); const last=ks.pop(); const t=ks.reduce((a,k)=>a[k],o); t[last]=(typeof t[last]==="number" && v!=="" && !isNaN(v)) ? +v : v; }
-const ci = () => Math.max(0, Math.min(S.active, S.chars.length-1));
-const C = () => S.chars[ci()];
+/* a hook link (#h-…) shows its character with the hook's lines on top, without touching saved data */
+let OVR = null;
+const ci = () => OVR ? OVR.k : Math.max(0, Math.min(S.active, S.chars.length-1));
+const C = () => OVR ? OVR.c : S.chars[ci()];
 const E = (path, val, tag="span", cls="") => `<${tag}${cls?` class="${cls}"`:""} data-edit="${path}">${esc(val)}</${tag}>`;
 const first = c => (c.name||"").split(" ")[0];
 const lastOf = c => { const m=[...c.messages].reverse().find(m=>m.t==="them"||m.t==="me"); return m?m.x:""; };
@@ -675,7 +711,7 @@ function chatView(withVid=false){
     return E(p, m.x, "div", "b "+m.t);
   }).join("");
   const cast = S.chars.slice(0,4);
-  if (i >= 4) cast[3] = c;
+  if (i >= 4) cast[3] = S.chars[i];
   return `<div class="screen chat">
     <div class="bgup" data-upload="chars.${i}.art">${media(artOf(c))}</div><div class="veil"></div>
     <div class="chead">
@@ -915,6 +951,12 @@ function stopRing(){ clearInterval(ringT); ringT = 0; }
 /* #chat-3, #call-3, #video-3… open that screen for character 3 (1 = first in the list) */
 function route(){
   let h = location.hash.slice(1);
+  OVR = null;
+  const hk = h.startsWith("h-") && HOOKS[h.slice(2)];
+  if (hk){
+    const k = S.chars.findIndex(c => c.name === hk.char), base = S.chars[k] || DEFAULT.chars.find(c => c.name === hk.char);
+    if (base){ const {screen, char, ...lines} = hk; OVR = {k: Math.max(0,k), c: {...base, ...lines}}; return screen; }
+  }
   const m = h.match(/^(feed|chat|action|video|call|comic)-(\d+)$/);
   if (m){ const k = +m[2]-1; if (S.chars[k] && S.active !== k){ S.active = k; save(); } h = m[1]; }
   return SCREENS.some(s=>s[0]===h) ? h : "feed";
