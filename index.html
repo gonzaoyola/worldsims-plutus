@@ -303,6 +303,22 @@ button{font:inherit;color:inherit}
 .cctl span{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
 .cctl .dec{width:54px;height:54px}
 
+/* ---------- missed calls on the lock screen ---------- */
+.mstack{position:absolute;left:12px;right:12px;bottom:calc(120px + var(--bot));z-index:2;cursor:pointer}
+.mhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:0 6px 8px;font-size:15px;text-shadow:0 1px 10px rgba(0,0,0,.4)}
+.mhead b{font-size:21px;font-weight:700}
+.mhead #mn{color:#ff453a}
+.mhead small{opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcards{position:relative;padding-bottom:16px;display:flex;flex-direction:column;gap:8px}
+.mold{opacity:.85}.mold:nth-child(3){opacity:.7}.mold:nth-child(4){opacity:.55}
+.mc{position:relative;z-index:3}
+.mc.bump{animation:bump .45s ease-out}
+@keyframes bump{0%{transform:translateY(-10px) scale(.98);opacity:.6}60%{transform:translateY(2px)}100%{transform:none;opacity:1}}
+.mc .body{color:#ff6b62}
+.mc2,.mc3{position:absolute;height:30px;border-radius:0 0 18px 18px;background:rgba(40,40,48,.45);backdrop-filter:blur(20px)}
+.mc2{left:12px;right:12px;bottom:6px;z-index:2}
+.mc3{left:26px;right:26px;bottom:-3px;z-index:1;opacity:.7}
+
 /* ---------- comic that comes alive ---------- */
 .comic{background:#0b0b0f}
 .cpage{position:absolute;top:calc(var(--top) + 66px);left:12px;right:12px;bottom:calc(100px + var(--bot));display:flex;flex-direction:column;gap:8px;padding:8px;background:#f4efe3;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
@@ -408,6 +424,7 @@ const SCREENS = [
   ["video","NEW · Video message"],
   ["call","NEW · Incoming call"],
   ["comic","NEW · Comic comes alive"],
+  ["missed","NEW · Missed calls → call"],
   ["feed","For You · sim card"],
   ["chats","Messages list"],
   ["chat","Chat"],
@@ -535,6 +552,19 @@ const HOOKS = {
                      call:"hiii, wake up babe! it's Sabrina. your girlfriend has amazing taste, by the way. okay bye"},
   "harry-bday":     {screen:"call", char:"Harry Styles",
                      call:"happy birthday! I know it's five a.m., sorry. I just wanted to be the first one to say it. now go back to sleep, love"},
+  /* lock screen full of missed calls, then the call comes in */
+  "missed-harry":    {screen:"missed", char:"Harry Styles", missed:47,
+                      call:"finally! forty seven calls, love. I thought something happened to you. don't ever do that to me again"},
+  "missed-jacob":    {screen:"missed", char:"Jacob Elordi", missed:63,
+                      call:"sixty three calls. I was about to drive to your place. where were you? and who were you with?"},
+  "missed-timothee": {screen:"missed", char:"Timothée Chalamet", missed:38,
+                      call:"you're alive! I called you thirty eight times. Kylie's asking about us. we need to talk, now"},
+  "missed-sabrina":  {screen:"missed", char:"Sabrina Carpenter", missed:52,
+                      call:"oh so NOW you pick up? fifty two calls, babe. you're lucky you're cute"},
+  "missed-kylie":    {screen:"missed", char:"Kylie Jenner", missed:29,
+                      call:"twenty nine calls and you still didn't pick up? nobody ignores me. nobody"},
+  "missed-joker":    {screen:"missed", char:"Joker", missed:99,
+                      call:"ninety nine calls! you're a hard one to reach, partner. good thing I already know where you live"},
   /* comic that comes alive */
   "comic-talking":  {screen:"comic", char:"Jacob Elordi", comic:["wait… you made me in 2 minutes?","and now I can TALK?","okay. page 2. now"]},
   "comic-joker":    {screen:"comic", char:"Joker", comic:["why is my comic talking to you?","because I wanted to, partner","now turn the page… if you dare"]},
@@ -929,6 +959,42 @@ function runComic(){
   go(0);
 }
 
+/* Missed calls: the lock screen piles up calls from one character, the
+   counter keeps climbing, then the call comes in (or sooner if you tap it). */
+let missN = 0, missT = 0, missRing = false;
+function missedView(){
+  const c = C(), i = ci(), n = missN || +c.missed || 47;
+  return `<div class="screen lock">
+    <div class="bgup" data-upload="wall">${S.wall ? media(S.wall) : `<div class="wall"></div>`}</div><div class="dim"></div>
+    <div class="clock"><div class="d" data-edit="date">${esc(S.date)}</div><div class="t">${esc(S.time)}</div></div>
+    <div class="mstack" data-ringnow>
+      <div class="mhead"><b><span id="mn">${n}</span> missed calls</b><small>${esc(c.name)}</small></div>
+      <div class="mcards">
+        ${["now","1m ago","2m ago","4m ago"].map((t,k)=>`<div class="nt ${k?"mold":"mc"}"><div class="pic"><div class="av" ${k?"":`data-upload="chars.${i}.avatar"`} style="${bgImg(avOf(c))}"></div><span class="gl">${GLOBE(10)}</span></div>
+          <div class="tx"><div class="top"><b>${esc(c.name)}</b><span>${t}</span></div><div class="body">${k?"Missed video call":`Missed video call (${n})`}</div></div></div>`).join("")}
+        <i class="mc2"></i><i class="mc3"></i>
+      </div>
+    </div>
+    <div class="lockbar"><span>${I.torch}</span><span>${I.cam}</span></div>
+    <div class="homeind"></div>
+  </div>`;
+}
+function startMissed(){
+  if (missT || missRing || editing) return;
+  missN = +C().missed || 47;
+  let ticks = 0;
+  missT = setInterval(() => {
+    missN++; ticks++;
+    const el = $("#mn"), card = $(".mc"), body = $(".mc .body");
+    if (el) el.textContent = missN;
+    if (body) body.textContent = `Missed video call (${missN})`;
+    if (card){ card.classList.remove("bump"); void card.offsetWidth; card.classList.add("bump"); }
+    if (ticks >= 6) ringNow();
+  }, 1300);
+}
+function ringNow(){ clearInterval(missT); missT = 0; missRing = true; render(); }
+function resetMissed(){ clearInterval(missT); missT = 0; missN = 0; missRing = false; }
+
 /* ringtone for the incoming call (the browser only lets it play after the first tap) */
 let ringCtx = null, ringT = 0;
 function startRing(){
@@ -957,14 +1023,15 @@ function route(){
     const k = S.chars.findIndex(c => c.name === hk.char), base = S.chars[k] || DEFAULT.chars.find(c => c.name === hk.char);
     if (base){ const {screen, char, ...lines} = hk; OVR = {k: Math.max(0,k), c: {...base, ...lines}}; return screen; }
   }
-  const m = h.match(/^(feed|chat|action|video|call|comic)-(\d+)$/);
+  const m = h.match(/^(feed|chat|action|video|call|comic|missed)-(\d+)$/);
   if (m){ const k = +m[2]-1; if (S.chars[k] && S.active !== k){ S.active = k; save(); } h = m[1]; }
   return SCREENS.some(s=>s[0]===h) ? h : "feed";
 }
 function render(){
   const r = route();
-  $("#screen").innerHTML = r==="feed"?feed(): r==="chats"?chats(): r==="chat"?chatView(): r==="video"?chatView(true): r==="call"?callView(): r==="comic"?comicView(): r==="action"?action(): lock();
-  if (r==="call" && !editing && !overMode) startRing(); else stopRing();
+  $("#screen").innerHTML = r==="feed"?feed(): r==="chats"?chats(): r==="chat"?chatView(): r==="video"?chatView(true): r==="call"?callView(): r==="comic"?comicView(): r==="missed"?(missRing?callView():missedView()): r==="action"?action(): lock();
+  if ((r==="call" || (r==="missed" && missRing)) && !editing && !overMode) startRing(); else stopRing();
+  if (r==="missed") startMissed();
   $("#sb").innerHTML = statusBar();
   $("#app").classList.toggle("with-sb", !!S.showBar);
   $("#app").classList.toggle("editing", editing);
@@ -996,6 +1063,7 @@ app.addEventListener("click", e => {
   if (e.target.closest("[data-accept]")) return playCall();
   if (e.target.closest("[data-decline]")){ stopRing(); location.hash = "chats"; return; }
   if (e.target.closest("[data-alive]")) return runComic();
+  if (e.target.closest("[data-ringnow]")) return ringNow();
   const go = e.target.closest("[data-go]"); if (go){ actState = "run"; location.hash = go.dataset.go; return; }
   const op = e.target.closest("[data-open]"); if (op){ S.active=+op.dataset.open; S.chars[S.active].unread=0; save(); location.hash="chat"; render(); return; }
   const sel = e.target.closest("[data-sel]"); if (sel){ S.active=+sel.dataset.sel; S.chars[S.active].unread=0; save(); render(); renderPanel(); return; }
@@ -1192,7 +1260,7 @@ addEventListener("keydown", e => {
   if (e.key==="ArrowDown") step(1);
   if (e.key==="ArrowUp") step(-1);
 });
-addEventListener("hashchange", ()=>{ actState="run"; closeOver(); stopRing(); render(); });
+addEventListener("hashchange", ()=>{ actState="run"; closeOver(); stopRing(); resetMissed(); render(); });
 app.addEventListener("pointerdown", ()=>{ if (ringCtx?.state === "suspended") ringCtx.resume(); });
 if ("speechSynthesis" in window) speechSynthesis.getVoices();   /* some browsers load the voice list late */
 /* The editor is hidden from regular visitors. It opens with ?studio in the
