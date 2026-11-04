@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#050507">
 <title>World Sims Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Bangers&display=swap">
 <style>
 /* Layout: the app itself, full height, like the real product on a phone.
    On wide screens it sits as a column over a blurred backdrop of the
@@ -232,6 +232,97 @@ button{font:inherit;color:inherit}
 .lockbar span{width:50px;height:50px;border-radius:50%;background:rgba(40,40,48,.5);backdrop-filter:blur(20px);display:grid;place-items:center}
 .homeind{position:absolute;left:50%;bottom:calc(10px + var(--bot));width:140px;height:5px;border-radius:3px;background:#fff;transform:translateX(-50%);z-index:2}
 
+/* ---------- a still image that looks animated: slow zoom, breathing, a bump on every word ---------- */
+.kb{position:absolute;inset:0;overflow:hidden;animation:kb 16s ease-in-out infinite alternate}
+.br{position:absolute;inset:0;animation:br 3.4s ease-in-out infinite}
+.ali{position:absolute;inset:0}
+.ali.beat{animation:beat .22s ease-out}
+@keyframes kb{from{transform:scale(1.06)}to{transform:scale(1.18) translate(-2%,-3%)}}
+@keyframes br{0%,100%{transform:none}50%{transform:translateY(-.8%) rotate(.4deg)}}
+@keyframes beat{40%{transform:scale(1.025) translateY(-.4%)}}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+
+/* ---------- video message: bubble in the chat + full screen player ---------- */
+.vbub{align-self:flex-start;position:relative;width:170px;height:250px;flex:none;border-radius:22px;border-bottom-left-radius:8px;overflow:hidden;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.5);animation:drop .5s ease-out}
+.vimg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.8)}
+.vplay{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.25);backdrop-filter:blur(8px);display:grid;place-items:center}
+.vdur{position:absolute;left:10px;bottom:9px;font-size:12.5px;font-weight:600;text-shadow:0 1px 4px #000}
+.vgl,.wm .gl{width:22px;height:22px;border-radius:7px;background:linear-gradient(140deg,#4ade80,#3b6cf6);display:grid;place-items:center}
+.vgl{position:absolute;right:8px;bottom:8px}
+.over{position:absolute;inset:0;z-index:30;background:#000}
+.over[hidden]{display:none}
+.pl{position:absolute;inset:0;overflow:hidden;background:#000}
+.pl::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.45) 0,transparent 18%,transparent 60%,rgba(0,0,0,.55));pointer-events:none}
+.plbar{position:absolute;top:calc(var(--top) + 6px);left:12px;right:12px;height:3px;border-radius:2px;background:rgba(255,255,255,.3);z-index:2;overflow:hidden}
+.plbar i{display:block;height:100%;background:#fff;transform-origin:left;animation:bar linear forwards}
+@keyframes bar{from{transform:scaleX(0)}}
+.plhead{position:absolute;top:calc(var(--top) + 18px);left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:2}
+.plhead .av{width:38px;height:38px}
+.plhead > div:nth-child(2){flex:1;min-width:0;line-height:1.2}
+.plhead b{display:block;font-size:15px}
+.plhead small{font-size:12.5px;color:rgba(255,255,255,.75)}
+.x2{width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.35);cursor:pointer;font-size:15px}
+.cap{position:absolute;left:16px;right:16px;bottom:calc(150px + var(--bot));z-index:3;text-align:center;font:800 32px/1.12 var(--ui);text-transform:uppercase;letter-spacing:-.01em;color:#fff;-webkit-text-stroke:6px #000;paint-order:stroke fill;filter:drop-shadow(0 4px 10px rgba(0,0,0,.45))}
+.cap span{display:inline-block}
+.cap span.on{color:var(--green);animation:pop .16s ease-out}
+.wm{position:absolute;right:14px;bottom:calc(96px + var(--bot));z-index:3;display:flex;align-items:center;gap:6px;padding:5px 10px 5px 5px;border-radius:13px;background:rgba(0,0,0,.35);font-size:12.5px;font-weight:600;opacity:.9}
+.endc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(80% 50% at 50% 45%,#13241a 0,#050507 70%);animation:rin .4s ease-out}
+.ebig{display:flex;align-items:center;gap:12px;font-size:40px;font-weight:700;letter-spacing:-.02em}
+.ebig .gl{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(140deg,#4ade80,#3b6cf6);box-shadow:0 10px 40px rgba(74,222,128,.35)}
+.endc p{margin:0;font-size:17px;color:var(--muted)}
+.eurl{margin-top:6px;padding:12px 26px;border-radius:24px;background:var(--green);color:#04130a;font-weight:700;font-size:18px}
+.erp{position:absolute;bottom:calc(30px + var(--bot));border:0;background:none;color:var(--muted);font-size:14px;cursor:pointer}
+
+/* ---------- incoming call ---------- */
+.callin{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;background:#000}
+.callin .bgup .media{filter:blur(24px) brightness(.55) saturate(1.2);transform:scale(1.2)}
+.cveil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.55))}
+.ctop{position:absolute;top:calc(var(--top) + 54px);left:20px;right:20px;text-align:center;z-index:2}
+.ctop small{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:rgba(255,255,255,.75)}
+.ctop h2{margin:10px 0 4px;font-size:36px;font-weight:600;letter-spacing:-.01em}
+.ctop p{margin:0;font-size:17px;color:rgba(255,255,255,.75)}
+.cring{position:absolute;left:50%;top:47%;width:150px;height:150px;transform:translate(-50%,-50%);z-index:2}
+.cring .av{width:150px;height:150px;border:3px solid rgba(255,255,255,.25)}
+.cring::before,.cring::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.5);animation:ripple 2s ease-out infinite}
+.cring::after{animation-delay:1s}
+@keyframes ripple{to{transform:scale(1.8);opacity:0}}
+.cbtns{position:absolute;left:0;right:0;bottom:calc(70px + var(--bot));display:flex;justify-content:space-around;z-index:2}
+.cbtns > div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px}
+.dec,.acc{width:74px;height:74px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;color:#fff}
+.dec{background:#ff3b30}.dec svg{transform:rotate(135deg)}
+.acc{background:#34c759;animation:wob 1.2s ease-in-out infinite}
+@keyframes wob{10%,30%{transform:rotate(-12deg)}20%,40%{transform:rotate(12deg)}50%{transform:none}}
+.call .ctime{position:absolute;top:calc(var(--top) + 14px);left:16px;z-index:3;line-height:1.2;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.call .ctime b{display:block;font-size:20px}
+.call .ctime span{font-size:14px;opacity:.85}
+.call .wm{bottom:auto;right:auto;top:calc(var(--top) + 70px);left:16px}
+.pip{position:absolute;top:calc(var(--top) + 12px);right:14px;width:100px;height:140px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#2a2a33,#111);border:1px solid rgba(255,255,255,.2);z-index:3;display:grid;place-items:end center}
+.pip video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.pip small{position:relative;margin-bottom:6px;font-size:11px;opacity:.75}
+.cctl{position:absolute;left:24px;right:24px;bottom:calc(26px + var(--bot));display:flex;justify-content:space-around;align-items:center;padding:12px;border-radius:40px;background:rgba(30,30,36,.6);backdrop-filter:blur(20px);z-index:3}
+.cctl span{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+.cctl .dec{width:54px;height:54px}
+
+/* ---------- comic that comes alive ---------- */
+.comic{background:#0b0b0f}
+.cpage{position:absolute;top:calc(var(--top) + 66px);left:12px;right:12px;bottom:calc(100px + var(--bot));display:flex;flex-direction:column;gap:8px;padding:8px;background:#f4efe3;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.ctag{position:absolute;top:-12px;left:16px;z-index:4;padding:5px 10px;background:#111;color:#fff;font:400 15px/1 "Bangers",var(--ui);letter-spacing:.08em;transform:rotate(-2deg)}
+.pn{position:relative;flex:1.25;min-height:0;border:3px solid #111;overflow:hidden;background:#222;transition:transform .35s ease,filter .35s ease}
+.prow{flex:1;min-height:0;display:flex;gap:8px}
+.prow .pn{flex:1}
+.pimg{position:absolute;inset:-6%;background-repeat:no-repeat}
+.pn::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,.22) 1px,transparent 1.3px);background-size:5px 5px;mix-blend-mode:multiply;pointer-events:none}
+.cb{position:absolute;left:10px;top:10px;max-width:80%;z-index:2;padding:8px 12px;background:#fff;color:#111;border:2.5px solid #111;border-radius:18px;font:400 18px/1.1 "Bangers",var(--ui);letter-spacing:.04em;text-transform:uppercase}
+.prow .cb{font-size:15px;left:6px;top:6px;padding:6px 9px}
+.cb::after{content:"";position:absolute;left:22px;bottom:-14px;border:7px solid transparent;border-top:10px solid #111}
+.cb:empty{display:none}
+.living .pn.dim{filter:grayscale(.6) brightness(.5)}
+.living .pn.on{transform:scale(1.04);z-index:2;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+.living .pn.on .pimg{animation:kb 8s ease-in-out infinite alternate}
+.alivebtn{position:absolute;left:24px;right:24px;bottom:calc(26px + var(--bot));height:56px;border-radius:28px;border:0;background:linear-gradient(100deg,#4ade80,#3b6cf6);color:#04130a;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 10px 40px rgba(74,222,128,.35);animation:glow 2s ease-in-out infinite;transition:opacity .3s}
+.alivebtn.gone{opacity:0;pointer-events:none}
+@keyframes glow{50%{transform:scale(1.03);box-shadow:0 10px 50px rgba(74,222,128,.6)}}
+
 /* ---------- editing ---------- */
 .editing [data-edit]{outline:1.5px dashed rgba(74,222,128,.7);outline-offset:2px;border-radius:6px;cursor:text}
 .editing [data-upload]{cursor:copy}
@@ -291,6 +382,7 @@ textarea.io{width:100%;min-height:90px;background:#0b0b10;border:1px solid var(-
     <div class="backdrop" id="backdrop"></div>
     <main class="app" id="app">
       <div id="screen" class="screen"></div>
+      <div id="over" class="over" hidden></div>
       <div class="sb" id="sb"></div>
     </main>
   </div>
@@ -313,6 +405,9 @@ const BRAND = { name: "World Sims" };
 
 const KEY = "worldsims-studio-v1";
 const SCREENS = [
+  ["video","NEW · Video message"],
+  ["call","NEW · Incoming call"],
+  ["comic","NEW · Comic comes alive"],
   ["feed","For You · sim card"],
   ["chats","Messages list"],
   ["chat","Chat"],
@@ -322,8 +417,14 @@ const SCREENS = [
 const DEFAULT = {
   active:0, time:"9:41", battery:87, showBar:false, coins:400,
   date:"Monday, November 2", wall:"",
+  site:"plutus.gg", voice:true, selfCam:false,
+  /* art:"img/<name>.jpg" is a file in the repo; until it's uploaded the silhouette shows */
   chars:[
-    {name:"Timothée Chalamet", bomb:"Timothée left Kylie for YOU 😳", sim:"Met Gala: After Party", scene:"The Mark Hotel rooftop, 2 AM", players:"55.9K", hue:220, avatar:"", art:"",
+    {name:"Timothée Chalamet", bomb:"Timothée left Kylie for YOU 😳", sim:"Met Gala: After Party", scene:"The Mark Hotel rooftop, 2 AM", players:"55.9K", hue:220, avatar:"", art:"img/timothee.jpg",
+     voice:"m", vmAsk:"so are we doing dinner or not?? 🙄",
+     vm:"okay listen. I told Kylie it's over. so dinner tomorrow, 8pm. wear something nice and don't make me regret this",
+     call:"you're still awake? good. I'm outside your place. come down, I need to show you something",
+     comic:["you left the after party without me?","I cancelled on Kylie for you","so… dinner?"],
      like:72, mood:"😍", unread:2, time:"now",
      notif:"let me take you to dinner tomorrow. just us 🤍",
      chips:["only if you pick the place","what about Kylie?"],
@@ -331,7 +432,11 @@ const DEFAULT = {
      action:"I tell Timothée I'll only go if he cancels on Kylie",
      result:"Timothée cancelled on Kylie. Dinner at 8 🍝", gain:15,
      messages:[{t:"date",x:"TONIGHT"},{t:"them",x:"you left the after party without saying bye 👀"},{t:"me",x:"it was getting late 😅"},{t:"them",x:"let me take you to dinner tomorrow. just us 🤍"},{t:"up",x:"Timothée · likeability +12"}]},
-    {name:"Kylie Jenner", bomb:"Kylie just found out about you two 💅", sim:"Calabasas Drama", scene:"Kylie's mansion, the morning after", players:"80.0K", hue:330, avatar:"", art:"",
+    {name:"Kylie Jenner", bomb:"Kylie just found out about you two 💅", sim:"Calabasas Drama", scene:"Kylie's mansion, the morning after", players:"80.0K", hue:330, avatar:"", art:"img/kylie.jpg",
+     voice:"f", vmAsk:"it was ONE dinner relax 😭",
+     vm:"hi babe. I saw the photos. cute. enjoy him while it lasts, because I always get what I want 💅",
+     call:"don't hang up on me. we need to talk about Timothée. like right now",
+     comic:["stay away from him","I saw the photos 🙂","you have no idea who I am"],
      like:-40, mood:"😤", unread:3, time:"2m",
      notif:"stay away from Timothée.",
      chips:["he invited ME","relax it was just dinner"],
@@ -339,7 +444,11 @@ const DEFAULT = {
      action:"I post the dinner pic on my story and tag Timothée",
      result:"Kylie unfollowed you. The internet is losing it 😳", gain:-20,
      messages:[{t:"them",x:"stay away from Timothée."},{t:"them",x:"I saw the photos from last night 🙂"},{t:"down",x:"Kylie · likeability -25"}]},
-    {name:"Jacob Elordi", bomb:"Jacob got caught in YOUR trailer 👀", sim:"Euphoria: On Set", scene:"Trailer 4, between takes", players:"21.8K", hue:15, avatar:"", art:"",
+    {name:"Jacob Elordi", bomb:"Jacob got caught in YOUR trailer 👀", sim:"Euphoria: On Set", scene:"Trailer 4, between takes", players:"21.8K", hue:15, avatar:"", art:"img/jacob.jpg",
+     voice:"m", vmAsk:"where are you?? they're looking for you 😭",
+     vm:"be honest. you came to set for me, right? because I'm not leaving this trailer until you answer",
+     call:"the director's looking for you. get in my trailer. hurry, he's coming",
+     comic:["you came to set for me?","the director can't find us here","stay. one more take"],
      like:55, mood:"😏", unread:1, time:"5m",
      notif:"be honest… did you come to set for me?",
      chips:["maybe 👀","I came for Zendaya"],
@@ -347,7 +456,11 @@ const DEFAULT = {
      action:"I hide in Jacob's trailer before the director finds us",
      result:"The director caught you both. Jacob took the blame 😮‍💨", gain:10,
      messages:[{t:"them",x:"be honest… did you come to set for me?"},{t:"them",x:"because I'm not leaving till you answer"}]},
-    {name:"Harry Styles", bomb:"Harry wrote a song about YOU 🎤", sim:"Love On Tour: Backstage", scene:"Wembley Stadium, 10 minutes before the show", players:"102.3K", hue:280, avatar:"", art:"",
+    {name:"Harry Styles", bomb:"Harry wrote a song about YOU 🎤", sim:"Love On Tour: Backstage", scene:"Wembley Stadium, 10 minutes before the show", players:"102.3K", hue:280, avatar:"", art:"img/harry.jpg",
+     voice:"m", vmAsk:"good luck tonight!! 🥺",
+     vm:"I wrote a song about you. you'll hear it tonight. front row, okay? don't be late, love",
+     call:"I go on stage in five minutes and I can't stop thinking about you. come backstage after?",
+     comic:["I wrote a song about you","front row. don't be late","this one's for you, love"],
      like:80, mood:"🥰", unread:1, time:"12m",
      notif:"I wrote a song about you. you'll hear it tonight 🎤",
      chips:["play it first 🥺","is it about me or your ex?"],
@@ -355,7 +468,11 @@ const DEFAULT = {
      action:"I sneak on stage during the encore",
      result:"Harry pulled you on stage in front of 90,000 people 🎤", gain:20,
      messages:[{t:"them",x:"I wrote a song about you"},{t:"them",x:"don't tell anyone. you'll hear it tonight 🎤"},{t:"up",x:"Harry · likeability +8"}]},
-    {name:"Sabrina Carpenter", bomb:"You just beat Sabrina on the charts 📈", sim:"Pop Starlet: Rivals & Romance", scene:"The Green Room at the Grammys", players:"44.1K", hue:45, avatar:"", art:"",
+    {name:"Sabrina Carpenter", bomb:"You just beat Sabrina on the charts 📈", sim:"Pop Starlet: Rivals & Romance", scene:"The Green Room at the Grammys", players:"44.1K", hue:45, avatar:"", art:"img/sabrina.jpg",
+     voice:"f", vmAsk:"did you see the charts 👀",
+     vm:"congrats on number one babe. cute. enjoy it, because next week it's mine again",
+     call:"okay fine. collab. send me the demo before I change my mind",
+     comic:["you're number one now? cute","enjoy it while it lasts","…send me the demo"],
      like:-15, mood:"😒", unread:0, time:"1h",
      notif:"check the charts babe. you're #2 now 😘",
      chips:["enjoy it while it lasts","collab?"],
@@ -363,16 +480,33 @@ const DEFAULT = {
      action:"I challenge Sabrina to a live duet at the after party",
      result:"The duet went viral. 12M views overnight 📈", gain:25,
      messages:[{t:"them",x:"check the charts babe 😘"},{t:"them",x:"you're #2 now. cute."},{t:"down",x:"Sabrina · likeability -15"}]},
-    {name:"Gojo Satoru", bomb:"Gojo took off the blindfold for you 💀", sim:"Jujutsu High: After Class", scene:"Tokyo Jujutsu High, the rooftop", players:"67.4K", hue:190, avatar:"", art:"",
+    {name:"Gojo Satoru", bomb:"Gojo took off the blindfold for you 💀", sim:"Jujutsu High: After Class", scene:"Tokyo Jujutsu High, the rooftop", players:"67.4K", hue:190, avatar:"", art:"img/gojo.jpg",
+     voice:"m", vmAsk:"I'm NOT training today 😭",
+     vm:"you skipped training again. meet me on the roof. I'll go easy on you. maybe",
+     call:"relax, it's just me. I took the blindfold off. you've got ten seconds",
+     comic:["you skipped training again","I'll go easy on you","…the blindfold's off"],
      like:40, mood:"😎", unread:0, time:"3h",
      notif:"meet me on the roof. I'll go easy on you 😎",
      chips:["you never go easy","bring mochi and I'll come"],
      auto:"fine. mochi. but you're sparring with me after",
      action:"I challenge Gojo to a fight without the blindfold",
      result:"Gojo took off the blindfold. You lost in 0.2 seconds 💀", gain:5,
-     messages:[{t:"them",x:"you skipped training again"},{t:"them",x:"meet me on the roof. I'll go easy on you 😎"}]}
+     messages:[{t:"them",x:"you skipped training again"},{t:"them",x:"meet me on the roof. I'll go easy on you 😎"}]},
+    {name:"Joker", bomb:"The Joker picked YOU as his partner 🃏", sim:"Gotham After Dark", scene:"Ace Chemicals, midnight", players:"93.6K", hue:290, avatar:"", art:"img/joker.jpg",
+     like:25, mood:"🃏", unread:2, time:"now",
+     notif:"you ran from me last night. nobody runs from me 🃏",
+     chips:["I'm not scared of you","what do you want?"],
+     auto:"what I want? a partner. and I picked you",
+     action:"I help the Joker escape before Batman arrives",
+     result:"Batman got there too late. Gotham is yours now 🃏", gain:15,
+     voice:"m", vmAsk:"please stop texting me 😭",
+     vm:"why so serious? you ran from me last night. nobody runs from me. see you tonight, partner",
+     call:"surprise! did you miss me? don't hang up… I'm right behind you",
+     comic:["you came back to Gotham…","Batman can't save you now","so, partner… ready?"],
+     messages:[{t:"them",x:"you ran from me last night"},{t:"them",x:"nobody runs from me 🃏"}]}
   ]
 };
+const NEW_KEYS = ["bomb","voice","vmAsk","vm","call","comic"];
 
 let S = load();
 let editing = false, typingFor = -1;
@@ -382,8 +516,13 @@ let liveN = 1284, liveTimer = null;   /* "reacting now" counter on the sim card,
 function load(){
   let s = structuredClone(DEFAULT);
   try{ const raw = localStorage.getItem(KEY); if (raw) s = Object.assign(s, JSON.parse(raw)); }catch(e){}
-  /* saves from before the breaking headline existed get the default one */
-  DEFAULT.chars.forEach(d => { const c = s.chars.find(c => c.name === d.name); if (c && c.bomb == null) c.bomb = d.bomb; });
+  /* saves from before a field existed get the default one */
+  DEFAULT.chars.forEach(d => {
+    const c = s.chars.find(c => c.name === d.name);
+    if (!c){ if (d.name === "Joker") s.chars.push(structuredClone(d)); return; }
+    NEW_KEYS.forEach(k => { if (c[k] == null) c[k] = structuredClone(d[k]); });
+    if (!c.art && !c.avatar) c.art = d.art;
+  });
   return s;
 }
 function save(){
@@ -422,7 +561,13 @@ const I = {
   down:`<svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`,
   bulb:`<svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f5c542" stroke-width="1.9" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>`,
   torch:`<svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M9 2h6v4l-2 3v12h-2V9L9 6z"/></svg>`,
-  cam:`<svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm8 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>`
+  cam:`<svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M4 7h3l2-2.5h6L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm8 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>`,
+  play:`<svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg>`,
+  phone:`<svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>`,
+  video:`<svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><path d="M3 7a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm14 3.2 4-2.7v9l-4-2.7z"/></svg>`,
+  mic:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>`,
+  flip:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-2.5h6L17 7h3v12H4zM9 13a3 3 0 0 1 5.2-2M15 13a3 3 0 0 1-5.2 2"/></svg>`,
+  spark:`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7zM19 15l1 2.6 2.6 1-2.6 1L19 22l-1-2.4-2.6-1 2.6-1z"/></svg>`
 };
 
 /* ---------- default artwork until someone uploads their own ---------- */
@@ -430,8 +575,17 @@ function portrait(h){
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="hsl(${h},50%,32%)"/><stop offset=".55" stop-color="hsl(${h+30},40%,15%)"/><stop offset="1" stop-color="hsl(${h+50},35%,6%)"/></linearGradient><radialGradient id="l" cx=".78" cy=".22" r=".6"><stop offset="0" stop-color="hsl(${h+20},90%,75%)" stop-opacity=".5"/><stop offset="1" stop-color="hsl(${h},90%,60%)" stop-opacity="0"/></radialGradient><linearGradient id="s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="hsl(${h},30%,9%)"/><stop offset=".8" stop-color="hsl(${h},30%,14%)"/><stop offset="1" stop-color="hsl(${h+20},70%,60%)"/></linearGradient></defs><rect width="400" height="860" fill="url(#g)"/><rect width="400" height="860" fill="url(#l)"/><g fill="url(#s)"><ellipse cx="205" cy="360" rx="92" ry="112"/><path d="M118 410c10 60 40 92 87 92s77-32 87-92l12 120c70 22 116 70 126 330H-30c10-260 56-308 126-330z"/></g></svg>`;
   return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 }
-const artOf = c => c.art || c.avatar || portrait(c.hue);
-const avOf  = c => c.avatar || c.art || portrait(c.hue);
+/* images that live in the repo (img/…) but haven't been uploaded yet fall back to the silhouette */
+const miss = new Set();
+const has = s => !!s && !miss.has(s);
+const artOf = c => has(c.art) ? c.art : has(c.avatar) ? c.avatar : portrait(c.hue);
+const avOf  = c => has(c.avatar) ? c.avatar : has(c.art) ? c.art : portrait(c.hue);
+function probe(){
+  S.chars.forEach(c => [c.avatar, c.art].forEach(s => {
+    if (!s || /^(data:|blob:|video:)/.test(s) || miss.has(s)) return;
+    const im = new Image(); im.onerror = () => { miss.add(s); render(); renderPanel(); }; im.src = s;
+  }));
+}
 const imgURL = s => (s||"").startsWith("video:") ? "" : (s||"");
 const cssURL = s => `url('${imgURL(s).replace(/'/g,"%27")}')`;
 function media(src, cls="media"){
@@ -511,7 +665,7 @@ function chats(){
   </div>`;
 }
 
-function chatView(){
+function chatView(withVid=false){
   const c = C(), i = ci();
   const list = c.messages.map((m,k)=>{
     const p = `chars.${i}.messages.${k}.x`;
@@ -537,7 +691,7 @@ function chatView(){
       <div class="tx"><small>${esc(first(c))} · likeability</small><div class="lv" style="color:${+c.like>=0?"var(--green)":"var(--red)"}">${likeLabel(+c.like)} at ${signed(+c.like)}</div></div>
       ${E(`chars.${i}.mood`, c.mood, "div", "mood")}
     </div>
-    <div class="msgs" id="msgs"><div class="sp"></div>${list}${typingFor===i?`<div class="typing"><i></i><i></i><i></i></div>`:""}</div>
+    <div class="msgs" id="msgs"><div class="sp"></div>${list}${withVid ? (c.vmAsk ? E(`chars.${i}.vmAsk`, c.vmAsk, "div", "b me") : "") + vbub(c) : ""}${typingFor===i?`<div class="typing"><i></i><i></i><i></i></div>`:""}</div>
     <div class="chips">${(c.chips||[]).slice(0,2).map((t,k)=>`<button type="button" data-chip="${k}">${esc(t)}</button>`).join("")}</div>
     <form class="composer" data-compose>
       <button type="button" class="act" data-go="action" aria-label="Make an action">${I.bolt()}</button>
@@ -589,17 +743,186 @@ function lock(){
   </div>`;
 }
 
+/* ---------- new formats: video message, incoming call, comic that comes alive ---------- */
+const estSecs = t => Math.max(4, Math.round(String(t||"").split(/\s+/).length * .42));
+function vbub(c){
+  return `<div class="vbub" data-vid><div class="vimg" style="${bgImg(artOf(c))}"></div>
+    <span class="vplay">${I.play}</span><span class="vdur">0:${String(estSecs(c.vm)).padStart(2,"0")}</span><span class="vgl">${GLOBE(12)}</span></div>`;
+}
+const alive = c => `<div class="kb"><div class="br"><div class="ali">${media(artOf(c))}</div></div></div>`;
+const watermark = () => `<div class="wm"><span class="gl">${GLOBE(12)}</span>${esc(BRAND.name)}</div>`;
+
+function callView(){
+  const c = C(), i = ci();
+  return `<div class="screen callin">
+    <div class="bgup" data-upload="chars.${i}.art">${media(artOf(c))}</div><div class="cveil"></div>
+    <div class="ctop"><small>${GLOBE(13)} ${esc(BRAND.name)} video call</small>${E(`chars.${i}.name`, c.name, "h2")}<p>is calling you…</p></div>
+    <div class="cring"><div class="av" data-upload="chars.${i}.avatar" style="${bgImg(avOf(c))}"></div></div>
+    <div class="cbtns">
+      <div><button type="button" class="dec" data-decline aria-label="Decline">${I.phone}</button>Decline</div>
+      <div><button type="button" class="acc" data-accept aria-label="Accept">${I.video}</button>Accept</div>
+    </div>
+  </div>`;
+}
+
+function comicView(){
+  const c = C(), i = ci(), L = c.comic || [];
+  const pan = (n, pos, size) => `<div class="pn"><div class="ali"><div class="pimg" style="${bgImg(artOf(c))};background-position:${pos};background-size:${size}"></div></div>${E(`chars.${i}.comic.${n}`, L[n] || "", "div", "cb")}</div>`;
+  return `<div class="screen comic">
+    <div class="chead">
+      <button type="button" class="circ" data-go="chats" aria-label="Back">${I.back}</button>
+      <div class="t">${esc(c.sim)} · Page 1</div>
+      ${coins()}
+    </div>
+    <div class="cpage" data-upload="chars.${i}.art">
+      <div class="ctag">Playing as you</div>
+      ${pan(0, "50% 20%", "cover")}
+      <div class="prow">${pan(1, "50% 15%", "240%")}${pan(2, "40% 70%", "170%")}</div>
+    </div>
+    <button type="button" class="alivebtn" data-alive>${I.spark} Bring this page to life</button>
+  </div>`;
+}
+
+/* The character "talks": the browser reads the line out loud (if voice is on)
+   while the captions follow word by word and the image bumps on every word.
+   Falls back to timed captions when the browser gives no word timings. */
+const EMO = /[\p{Extended_Pictographic}‍️]/gu;
+let talkRun = 0;
+function pickVoice(g){
+  const en = ("speechSynthesis" in window ? speechSynthesis.getVoices() : []).filter(v => /^en[-_]/i.test(v.lang));
+  const want = g === "m" ? /daniel|alex|fred|aaron|arthur|oliver|rishi|tom\b|david|mark|guy|\bmale\b/i
+                         : /samantha|ava|allison|susan|victoria|karen|moira|tessa|serena|zira|jenny|aria|female|google us english/i;
+  return en.find(v => want.test(v.name)) || en[0] || null;
+}
+function hush(){ talkRun++; try{ speechSynthesis.cancel(); }catch(e){} }
+function talk(text, c, box, stage, done){
+  const run = ++talkRun, all = box?.classList.contains("cb");
+  const words = String(text||"").split(/\s+/).filter(Boolean);
+  let k = -1, timer = 0, synced = false, capsDone = false, voiceDone = true;
+  const end = () => { if (run !== talkRun || !capsDone || !voiceDone) return; clearTimeout(timer); done && done(); };
+  const show = n => {
+    if (run !== talkRun) return;
+    k = n;
+    const a = all ? 0 : n - n % 3;
+    if (box) box.innerHTML = words.slice(a, all ? n+1 : a+3).map((w,j) => `<span class="${a+j===n?"on":""}">${esc(w)}</span>`).join(" ");
+    if (stage){ stage.classList.remove("beat"); void stage.offsetWidth; stage.classList.add("beat"); }
+  };
+  const tick = () => {
+    if (run !== talkRun || synced) return;
+    if (k+1 >= words.length){ timer = setTimeout(() => { capsDone = true; end(); }, 700); return; }
+    show(k+1); timer = setTimeout(tick, 240 + words[k].replace(EMO,"").length * 55);
+  };
+  if (S.voice !== false && "speechSynthesis" in window && words.length){
+    let said = ""; const at = [];
+    words.forEach(w => { at.push(said.length); said += w.replace(EMO,"") + " "; });
+    const u = new SpeechSynthesisUtterance(said.trim());
+    const v = pickVoice(c.voice); if (v) u.voice = v;
+    u.lang = v?.lang || "en-US"; u.rate = 1.02; u.pitch = c.voice === "m" ? .9 : 1.1;
+    voiceDone = false;
+    const safety = setTimeout(() => { voiceDone = true; end(); }, 4000 + said.length * 120);
+    u.onboundary = e => {
+      if (run !== talkRun || (e.name && e.name !== "word")) return;
+      synced = true; clearTimeout(timer);
+      let n = 0; while (n+1 < at.length && at[n+1] <= e.charIndex) n++;
+      if (n !== k) show(n);
+    };
+    u.onend = u.onerror = () => {
+      clearTimeout(safety); voiceDone = true;
+      if (synced){ show(words.length-1); timer = setTimeout(() => { capsDone = true; end(); }, 600); } else end();
+    };
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+  tick();
+}
+
+const over = $("#over");
+let overMode = "", callTimer = 0, comicT = 0, camStream = null;
+function stopCam(){ camStream?.getTracks().forEach(t => t.stop()); camStream = null; }
+function closeOver(){
+  hush(); stopCam(); clearInterval(callTimer); clearTimeout(comicT);
+  over.hidden = true; over.innerHTML = ""; overMode = "";
+}
+function endCard(c){
+  hush(); stopCam(); clearInterval(callTimer);
+  over.hidden = false; overMode = "end";
+  over.innerHTML = `<div class="endc">
+    <div class="ebig"><span class="gl">${GLOBE(36)}</span>${esc(BRAND.name)}</div>
+    <p>Talk to ${esc(c.name)} now</p>
+    <div class="eurl">${esc(S.site)}</div>
+    <button type="button" class="erp" data-close-over>Back</button>
+  </div>`;
+}
+function playVideo(){
+  const c = C(); hush();
+  over.hidden = false; overMode = "vm";
+  over.innerHTML = `<div class="pl">${alive(c)}
+    <div class="plbar"><i style="animation-duration:${estSecs(c.vm)}s"></i></div>
+    <div class="plhead"><div class="av" style="${bgImg(avOf(c))}"></div><div><b>${esc(c.name)}</b><small>${esc(c.sim)}</small></div><button type="button" class="x2" data-close-over aria-label="Close">✕</button></div>
+    <div class="cap" id="cap"></div>${watermark()}
+  </div>`;
+  talk(c.vm, c, $("#cap"), over.querySelector(".ali"), () => endCard(c));
+}
+function playCall(){
+  const c = C(); stopRing(); hush();
+  over.hidden = false; overMode = "call";
+  over.innerHTML = `<div class="pl call">${alive(c)}
+    <div class="ctime"><b>${esc(c.name)}</b><span id="ctm">00:00</span></div>
+    <div class="pip">${S.selfCam ? `<video id="selfv" autoplay muted playsinline></video>` : ""}<small>You</small></div>
+    <div class="cap" id="cap"></div>${watermark()}
+    <div class="cctl"><span>${I.mic}</span><span>${I.flip}</span><button type="button" class="dec" data-endcall aria-label="End call">${I.phone}</button></div>
+  </div>`;
+  const t0 = Date.now();
+  callTimer = setInterval(() => { const s = Math.floor((Date.now()-t0)/1000), el = $("#ctm"); if (el) el.textContent = String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0"); }, 500);
+  if (S.selfCam && navigator.mediaDevices?.getUserMedia)
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}, audio:false})
+      .then(st => { camStream = st; const v = $("#selfv"); if (v && overMode === "call") v.srcObject = st; else stopCam(); })
+      .catch(() => {});
+  comicT = setTimeout(() => talk(c.call, c, $("#cap"), over.querySelector(".ali"), () => { comicT = setTimeout(() => endCard(c), 400); }), 700);
+}
+function runComic(){
+  const c = C(), page = $(".cpage"); if (!page || editing) return;
+  hush(); page.classList.add("living"); $(".alivebtn")?.classList.add("gone");
+  const pns = [...page.querySelectorAll(".pn")];
+  pns.forEach(p => { const b = p.querySelector(".cb"); if (b) b.textContent = ""; });
+  const go = n => {
+    if (route() !== "comic") return;
+    if (n >= pns.length){ comicT = setTimeout(() => endCard(c), 700); return; }
+    pns.forEach((p,k) => { p.classList.toggle("on", k===n); p.classList.toggle("dim", k!==n); });
+    comicT = setTimeout(() => talk((c.comic||[])[n] || "", c, pns[n].querySelector(".cb"), pns[n].querySelector(".ali"), () => { comicT = setTimeout(() => go(n+1), 350); }), 500);
+  };
+  go(0);
+}
+
+/* ringtone for the incoming call (the browser only lets it play after the first tap) */
+let ringCtx = null, ringT = 0;
+function startRing(){
+  if (ringT || S.voice === false) return;
+  try{ ringCtx = ringCtx || new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ return; }
+  const burst = () => {
+    const t = ringCtx.currentTime;
+    [440, 480].forEach(f => {
+      const o = ringCtx.createOscillator(), g = ringCtx.createGain();
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t+.05); g.gain.setValueAtTime(.07, t+1.9); g.gain.linearRampToValueAtTime(0, t+2);
+      o.connect(g).connect(ringCtx.destination); o.start(t); o.stop(t+2.05);
+    });
+  };
+  burst(); ringT = setInterval(burst, 4000);
+}
+function stopRing(){ clearInterval(ringT); ringT = 0; }
+
 /* ---------- render ---------- */
-/* #chat-3, #action-3, #feed-3 open that screen for character 3 (1 = first in the list) */
+/* #chat-3, #call-3, #video-3… open that screen for character 3 (1 = first in the list) */
 function route(){
   let h = location.hash.slice(1);
-  const m = h.match(/^(feed|chat|action)-(\d+)$/);
+  const m = h.match(/^(feed|chat|action|video|call|comic)-(\d+)$/);
   if (m){ const k = +m[2]-1; if (S.chars[k] && S.active !== k){ S.active = k; save(); } h = m[1]; }
   return SCREENS.some(s=>s[0]===h) ? h : "feed";
 }
 function render(){
   const r = route();
-  $("#screen").innerHTML = r==="feed"?feed(): r==="chats"?chats(): r==="chat"?chatView(): r==="action"?action(): lock();
+  $("#screen").innerHTML = r==="feed"?feed(): r==="chats"?chats(): r==="chat"?chatView(): r==="video"?chatView(true): r==="call"?callView(): r==="comic"?comicView(): r==="action"?action(): lock();
+  if (r==="call" && !editing && !overMode) startRing(); else stopRing();
   $("#sb").innerHTML = statusBar();
   $("#app").classList.toggle("with-sb", !!S.showBar);
   $("#app").classList.toggle("editing", editing);
@@ -624,6 +947,13 @@ app.addEventListener("click", e => {
   const up = e.target.closest("[data-upload]"), ed = e.target.closest("[data-edit]");
   if (editing && ed) return;
   if (editing && up && !e.target.closest("button,input,form,.b,.pill,.narr,.date")) { pick(up.dataset.upload); return; }
+  if (e.target.closest("[data-close-over]")){ closeOver(); render(); return; }
+  if (e.target.closest("[data-endcall]")){ clearTimeout(comicT); endCard(C()); return; }
+  if (editing && e.target.closest("[data-vid],[data-accept],[data-alive]")) return toast("Press Done to play it");
+  if (e.target.closest("[data-vid]")) return playVideo();
+  if (e.target.closest("[data-accept]")) return playCall();
+  if (e.target.closest("[data-decline]")){ stopRing(); location.hash = "chats"; return; }
+  if (e.target.closest("[data-alive]")) return runComic();
   const go = e.target.closest("[data-go]"); if (go){ actState = "run"; location.hash = go.dataset.go; return; }
   const op = e.target.closest("[data-open]"); if (op){ S.active=+op.dataset.open; S.chars[S.active].unread=0; save(); location.hash="chat"; render(); return; }
   const sel = e.target.closest("[data-sel]"); if (sel){ S.active=+sel.dataset.sel; S.chars[S.active].unread=0; save(); render(); renderPanel(); return; }
@@ -728,6 +1058,12 @@ function renderPanel(){
       <div class="fld"><label for="ac${k}">Your action</label><input id="ac${k}" data-bind="chars.${k}.action" value="${esc(c.action)}"></div>
       <div class="two"><div class="fld"><label for="r${k}">What happened</label><input id="r${k}" data-bind="chars.${k}.result" value="${esc(c.result)}"></div>
       <div class="fld"><label for="g${k}">Likeability change</label><input id="g${k}" type="number" data-bind="chars.${k}.gain" value="${esc(c.gain)}"></div></div>
+      <div class="sub">Video message · call · comic</div>
+      <div class="two"><div class="fld"><label for="va${k}">Your message before the video</label><input id="va${k}" data-bind="chars.${k}.vmAsk" value="${esc(c.vmAsk)}"></div>
+      <div class="fld"><label for="vo${k}">Voice</label><select id="vo${k}" data-bind="chars.${k}.voice"><option value="f" ${c.voice!=="m"?"selected":""}>Female</option><option value="m" ${c.voice==="m"?"selected":""}>Male</option></select></div></div>
+      <div class="fld"><label for="vm${k}">What they say in the video message</label><textarea id="vm${k}" rows="2" data-bind="chars.${k}.vm">${esc(c.vm)}</textarea></div>
+      <div class="fld"><label for="ca${k}">What they say on the call</label><textarea id="ca${k}" rows="2" data-bind="chars.${k}.call">${esc(c.call)}</textarea></div>
+      <div class="three">${[0,1,2].map(n=>`<div class="fld"><label for="co${k}${n}">Comic panel ${n+1}</label><input id="co${k}${n}" data-bind="chars.${k}.comic.${n}" value="${esc(c.comic?.[n])}"></div>`).join("")}</div>
       <div class="rowbtns">
         <button type="button" class="btn" data-pick="chars.${k}.avatar">Profile photo</button>
         <button type="button" class="btn" data-pick="chars.${k}.art">Large image / GIF</button>
@@ -754,6 +1090,9 @@ function renderPanel(){
   <div class="three" style="margin-top:8px"><div class="fld"><label for="tm">Time</label><input id="tm" data-bind="time" value="${esc(S.time)}"></div>
   <div class="fld"><label for="bt">Battery</label><input id="bt" type="number" min="1" max="100" data-bind="battery" value="${esc(S.battery)}"></div>
   <div class="fld"><label for="cn">Coins</label><input id="cn" data-bind="coins" value="${esc(S.coins)}"></div></div>
+  <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="voiceChk" ${S.voice!==false?"checked":""}> Sound: character voice and ringtone</label>
+  <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="camChk" ${S.selfCam?"checked":""}> Show my front camera in the video call</label>
+  <div class="fld" style="margin-top:8px"><label for="st">Website on the end screen</label><input id="st" data-bind="site" value="${esc(S.site)}"></div>
   <p class="hint">Record hides these buttons. To bring them back, press H or press and hold the logo or coins for 1.5 seconds.</p>
 
   <h3>Share a version</h3>
@@ -768,6 +1107,8 @@ panel.addEventListener("change", e => {
   const t = e.target;
   if (t.id==="activeSel"){ S.active=+t.value; actState="run"; save(); render(); renderPanel(); }
   else if (t.id==="sbChk"){ S.showBar=t.checked; save(); render(); }
+  else if (t.id==="voiceChk"){ S.voice=t.checked; if (!t.checked){ hush(); stopRing(); } save(); render(); }
+  else if (t.id==="camChk"){ S.selfCam=t.checked; save(); }
   else if (t.dataset.mtype!=null){ C().messages[+t.dataset.mtype].t=t.value; save(); render(); renderPanel(); }
   else if (t.dataset.bind) renderPanel();
 });
@@ -782,7 +1123,7 @@ panel.addEventListener("click", e => {
   if (d.clear!=null){ S.chars[+d.clear].avatar=""; S.chars[+d.clear].art=""; }
   if (d.bgclear) S[d.bgclear]="";
   if (d.del!=null){ S.chars.splice(+d.del,1); S.active=Math.min(S.active,S.chars.length-1); }
-  if (d.add!=null){ S.chars.push({name:"New character", bomb:"Everyone is talking about you two 👀", sim:"New Sim", scene:"Where it all starts", players:"12.4K", hue:Math.floor(Math.random()*360), avatar:"", art:"", like:0, mood:"🙂", unread:1, time:"now", notif:"hey. are you free tonight?", chips:["who's asking?","always 😌"], auto:"good. I'll text you the address", action:"I show up without telling anyone", result:"Everyone saw you two leave together 👀", gain:10, messages:[{t:"them", x:"hey. are you free tonight?"}]}); S.active=S.chars.length-1; }
+  if (d.add!=null){ S.chars.push({name:"New character", bomb:"Everyone is talking about you two 👀", sim:"New Sim", scene:"Where it all starts", players:"12.4K", hue:Math.floor(Math.random()*360), avatar:"", art:"", like:0, mood:"🙂", unread:1, time:"now", notif:"hey. are you free tonight?", chips:["who's asking?","always 😌"], auto:"good. I'll text you the address", action:"I show up without telling anyone", result:"Everyone saw you two leave together 👀", gain:10, voice:"f", vmAsk:"where are you?? 👀", vm:"hey. I can't stop thinking about last night. are you free tonight?", call:"hey, it's me. don't hang up. I need to see you tonight", comic:["are you free tonight?","I can't stop thinking about you","so… yes?"], messages:[{t:"them", x:"hey. are you free tonight?"}]}); S.active=S.chars.length-1; }
   if (d.mdel!=null) C().messages.splice(+d.mdel,1);
   if (d.madd){ const nm = first(C()); C().messages.push({them:{t:"them",x:"New message"}, me:{t:"me",x:"Your reply"}, up:{t:"up",x:nm+" · likeability +5"}, down:{t:"down",x:nm+" · likeability -5"}, narr:{t:"narr",x:nm+" looks at you and smiles"}}[d.madd]); }
   if (d.import!=null){ try{ const n = JSON.parse($("#io").value); if (!n.chars) throw 0; S = Object.assign(structuredClone(DEFAULT), n); toast("Version loaded"); }catch(err){ return toast("That code isn't valid. Copy the full code with Copy code."); } }
@@ -809,7 +1150,9 @@ addEventListener("keydown", e => {
   if (e.key==="ArrowDown") step(1);
   if (e.key==="ArrowUp") step(-1);
 });
-addEventListener("hashchange", ()=>{ actState="run"; render(); });
+addEventListener("hashchange", ()=>{ actState="run"; closeOver(); stopRing(); render(); });
+app.addEventListener("pointerdown", ()=>{ if (ringCtx?.state === "suspended") ringCtx.resume(); });
+if ("speechSynthesis" in window) speechSynthesis.getVoices();   /* some browsers load the voice list late */
 /* The editor is hidden from regular visitors. It opens with ?studio in the
    link, or by pressing and holding the logo or coins for 1.5 seconds. Once
    opened on a device, that device remembers it until "Exit editor". */
@@ -828,6 +1171,7 @@ $("#exitBtn").addEventListener("click", ()=>{
   toast("Editor hidden. Hold the logo or coins for 1.5 seconds to open it again.");
 });
 render();
+probe();
 </script>
 </body>
 </html>
