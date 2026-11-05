@@ -14,12 +14,12 @@
 <style>
 :root{--top:max(env(safe-area-inset-top),20px);--bot:env(safe-area-inset-bottom);--gold:#f2c14e;--green:#34c759}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
-.scr{position:fixed;inset:0;display:none}
+html,body{height:100%;min-height:-webkit-fill-available;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+.scr{position:fixed;top:0;left:0;width:100%;height:100%;display:none;background:#111}
 .scr.on{display:block}
 
 /* incoming call */
-.blurbg{position:absolute;inset:-60px;background-size:cover;background-position:center;filter:blur(36px) saturate(1.1) brightness(.55);transform:scale(1.1)}
+.blurbg{position:absolute;top:0;left:0;width:100%;height:100%;background-color:#1a1a1f;background-size:cover;background-position:center}
 .brand{position:absolute;top:calc(var(--top) + 10px);left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px;z-index:3}
 .brand img{width:34px;height:34px;border-radius:50%}
 .brand b{font-size:24px;font-weight:900;letter-spacing:.04em;color:var(--gold)}
@@ -31,13 +31,15 @@ html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,Blink
 .qa{position:absolute;left:44px;right:44px;bottom:calc(150px + var(--bot));display:flex;justify-content:space-between;z-index:3}
 .qa div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14.5px}
 .qa span{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center}
-.slide{position:absolute;left:30px;right:30px;bottom:calc(44px + var(--bot));height:74px;border-radius:37px;background:rgba(30,32,36,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);z-index:3;overflow:hidden;touch-action:none}
-.slide .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-left:60px;font-size:22px;color:transparent;background:linear-gradient(90deg,#7a7d84 0%,#7a7d84 40%,#e2e4e8 50%,#7a7d84 60%,#7a7d84 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shine 2.4s linear infinite}
+.slide{position:absolute;left:30px;right:30px;bottom:calc(44px + var(--bot));height:74px;border-radius:37px;background:rgba(30,32,36,.88);z-index:3;overflow:hidden;touch-action:none}
+.slide .lab{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding-left:60px;font-size:22px;color:transparent;background:linear-gradient(90deg,#7a7d84 0%,#7a7d84 40%,#e2e4e8 50%,#7a7d84 60%,#7a7d84 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shine 2.4s linear infinite}
 @keyframes shine{from{background-position:100% 0}to{background-position:-50% 0}}
 .slide .knob{position:absolute;left:6px;top:6px;width:62px;height:62px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
 
 /* in call */
-#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#vid{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;background:#000}
+.tap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;border:0;border-radius:24px;padding:14px 22px;background:rgba(0,0,0,.65);color:#fff;font-size:17px;font-weight:600;display:none}
+#err{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#b00;color:#fff;font:12px monospace;padding:6px;border-radius:6px;display:none}
 .vtop{position:absolute;top:0;left:0;right:0;padding:calc(var(--top) + 6px) 16px 40px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent);z-index:3;text-align:center}
 .vtop .nm{font-size:20px;font-weight:600;margin-top:22px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 .vtop .tm{font-size:14px;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums;margin-top:2px}
@@ -72,7 +74,8 @@ html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,Blink
 </section>
 
 <section class="scr" id="incall">
-  <video id="vid" playsinline webkit-playsinline preload="auto"></video>
+  <video id="vid" playsinline webkit-playsinline preload="metadata"></video>
+  <button class="tap" id="tap">▶︎ Tap to play</button>
   <div class="vtop"><div class="nm" id="name2"></div><div class="tm" id="tm">00:00</div></div>
   <button class="hang" id="hang"><svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1 0-1.36C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.72c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28a11.3 11.3 0 0 0-2.67-1.85.996.996 0 0 1-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
 </section>
@@ -83,10 +86,12 @@ html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,Blink
   <p id="dur">Call ended</p>
 </section>
 
+<div id="err"></div>
 <script>
+window.onerror = (m, src, l) => { const e = document.getElementById("err"); e.style.display = "block"; e.textContent = m + " (line " + l + ")"; };
 /* One character per link: call.html?c=<key>. Add new ones here. */
 const CHARS = {
-  "jacob-cat": { name: "Jacob's Cat 🐈‍⬛", img: "videos/jacob-cat.jpg", video: "videos/jacob-cat.mp4" }
+  "jacob-cat": { name: "Jacob's Cat 🐈‍⬛", img: "videos/jacob-cat.jpg", bg: "videos/jacob-cat-bg.jpg", video: "videos/jacob-cat.mp4" }
 };
 const key = new URLSearchParams(location.search).get("c") || "jacob-cat";
 const c = CHARS[key] || CHARS["jacob-cat"];
@@ -94,7 +99,8 @@ const $ = s => document.querySelector(s);
 const show = id => document.querySelectorAll(".scr").forEach(s => s.classList.toggle("on", s.id === id));
 
 $("#name").textContent = $("#name2").textContent = c.name;
-$("#bg").style.backgroundImage = $("#av").style.backgroundImage = `url("${c.img}")`;
+$("#bg").style.backgroundImage = `url("${c.bg || c.img}")`;
+$("#av").style.backgroundImage = `url("${c.img}")`;
 const vid = $("#vid");
 vid.src = c.video;
 vid.poster = c.img;
@@ -104,9 +110,10 @@ const fmt = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math
 
 function answer(){
   show("incall");
-  vid.currentTime = 0;
   vid.muted = false;
-  vid.play();   // inside the touch handler, so iOS allows sound
+  // Inside the touch handler, so iOS allows sound. If iOS still refuses, show a play button.
+  const p = vid.play();
+  if (p && p.catch) p.catch(() => { $("#tap").style.display = "block"; });
   t0 = Date.now();
   timer = setInterval(() => { $("#tm").textContent = fmt((Date.now() - t0) / 1000); }, 250);
 }
@@ -117,9 +124,10 @@ function hangup(){
   show("ended");
 }
 vid.addEventListener("ended", hangup);
+$("#tap").addEventListener("click", () => { $("#tap").style.display = "none"; vid.play(); });
 $("#hang").addEventListener("click", hangup);
 // Tap the ended screen to get the incoming call back (for another take).
-$("#ended").addEventListener("click", () => { resetKnob(); show("incoming"); });
+$("#ended").addEventListener("click", () => { vid.currentTime = 0; resetKnob(); show("incoming"); });
 
 const knob = $("#knob"), slide = $("#slide");
 let x0 = 0, dx = 0, max = 0, dragging = false;
@@ -131,12 +139,12 @@ knob.addEventListener("pointermove", e => {
   knob.style.transform = `translateX(${dx}px)`;
   slide.querySelector(".lab").style.opacity = 1 - dx / max;
 });
+knob.addEventListener("pointercancel", () => { dragging = false; resetKnob(); });
 knob.addEventListener("pointerup", () => {
   if (!dragging) return;
   dragging = false;
   if (dx > max * 0.65) answer(); else resetKnob();
 });
-document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
 </script>
 </body>
 </html>
