@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="World Sims">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="img/logo.png">
+<link rel="icon" href="img/logo.png">
+<title>World Sims</title>
+<style>
+:root{--top:max(env(safe-area-inset-top),20px);--bot:env(safe-area-inset-bottom);--gold:#f2c14e;--green:#34c759}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+.scr{position:fixed;inset:0;display:none}
+.scr.on{display:block}
+
+/* incoming call */
+.blurbg{position:absolute;inset:-60px;background-size:cover;background-position:center;filter:blur(36px) saturate(1.1) brightness(.55);transform:scale(1.1)}
+.brand{position:absolute;top:calc(var(--top) + 10px);left:0;right:0;display:flex;justify-content:center;align-items:center;gap:10px;z-index:3}
+.brand img{width:34px;height:34px;border-radius:50%}
+.brand b{font-size:24px;font-weight:900;letter-spacing:.04em;color:var(--gold)}
+.who{position:absolute;top:calc(var(--top) + 90px);left:16px;right:16px;text-align:center;z-index:3}
+.who .lbl{font-size:18px;color:rgba(255,255,255,.72);font-weight:500}
+.who h2{margin-top:6px;font-size:38px;font-weight:600;letter-spacing:-.02em;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.av{width:150px;height:150px;border-radius:50%;margin:30px auto 0;background-size:cover;background-position:center 20%;box-shadow:0 14px 50px rgba(0,0,0,.45);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,199,89,.55),0 14px 50px rgba(0,0,0,.45)}50%{box-shadow:0 0 0 18px rgba(52,199,89,0),0 14px 50px rgba(0,0,0,.45)}}
+.qa{position:absolute;left:44px;right:44px;bottom:calc(150px + var(--bot));display:flex;justify-content:space-between;z-index:3}
+.qa div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14.5px}
+.qa span{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center}
+.slide{position:absolute;left:30px;right:30px;bottom:calc(44px + var(--bot));height:74px;border-radius:37px;background:rgba(30,32,36,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);z-index:3;overflow:hidden;touch-action:none}
+.slide .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-left:60px;font-size:22px;color:transparent;background:linear-gradient(90deg,#7a7d84 0%,#7a7d84 40%,#e2e4e8 50%,#7a7d84 60%,#7a7d84 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;animation:shine 2.4s linear infinite}
+@keyframes shine{from{background-position:100% 0}to{background-position:-50% 0}}
+.slide .knob{position:absolute;left:6px;top:6px;width:62px;height:62px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+
+/* in call */
+#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+.vtop{position:absolute;top:0;left:0;right:0;padding:calc(var(--top) + 6px) 16px 40px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent);z-index:3;text-align:center}
+.vtop .nm{font-size:20px;font-weight:600;margin-top:22px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.vtop .tm{font-size:14px;color:rgba(255,255,255,.85);font-variant-numeric:tabular-nums;margin-top:2px}
+.hang{position:absolute;left:50%;bottom:calc(30px + var(--bot));transform:translateX(-50%);width:68px;height:68px;border-radius:50%;background:#ff3b30;display:flex;align-items:center;justify-content:center;z-index:3;border:0}
+
+/* ended */
+.end{background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.end.on{display:flex}
+.end img{width:110px;height:110px;border-radius:50%}
+.end b{font-size:40px;font-weight:900;letter-spacing:.04em;color:var(--gold)}
+.end p{font-size:16px;color:rgba(255,255,255,.6)}
+</style>
+</head>
+<body>
+
+<section class="scr on" id="incoming">
+  <div class="blurbg" id="bg"></div>
+  <div class="brand"><img src="img/logo.png" alt=""><b>PLUTUS.GG</b></div>
+  <div class="who">
+    <div class="lbl">World Sims video…</div>
+    <h2 id="name"></h2>
+    <div class="av" id="av"></div>
+  </div>
+  <div class="qa">
+    <div><span><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 11h-2V7h2zm0 4h-2v-2h2z"/></svg></span>Remind Me</div>
+    <div><span><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"/></svg></span>Message</div>
+  </div>
+  <div class="slide" id="slide">
+    <div class="lab">slide to answer</div>
+    <div class="knob" id="knob"><svg width="30" height="30" viewBox="0 0 24 24" fill="#34c759"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11z"/></svg></div>
+  </div>
+</section>
+
+<section class="scr" id="incall">
+  <video id="vid" playsinline webkit-playsinline preload="auto"></video>
+  <div class="vtop"><div class="nm" id="name2"></div><div class="tm" id="tm">00:00</div></div>
+  <button class="hang" id="hang"><svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 0 1 0-1.36C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.72c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28a11.3 11.3 0 0 0-2.67-1.85.996.996 0 0 1-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg></button>
+</section>
+
+<section class="scr end" id="ended">
+  <img src="img/logo.png" alt="">
+  <b>PLUTUS.GG</b>
+  <p id="dur">Call ended</p>
+</section>
+
+<script>
+/* One character per link: call.html?c=<key>. Add new ones here. */
+const CHARS = {
+  "jacob-cat": { name: "Jacob's Cat 🐈‍⬛", img: "videos/jacob-cat.jpg", video: "videos/jacob-cat.mp4" }
+};
+const key = new URLSearchParams(location.search).get("c") || "jacob-cat";
+const c = CHARS[key] || CHARS["jacob-cat"];
+const $ = s => document.querySelector(s);
+const show = id => document.querySelectorAll(".scr").forEach(s => s.classList.toggle("on", s.id === id));
+
+$("#name").textContent = $("#name2").textContent = c.name;
+$("#bg").style.backgroundImage = $("#av").style.backgroundImage = `url("${c.img}")`;
+const vid = $("#vid");
+vid.src = c.video;
+vid.poster = c.img;
+
+let t0 = 0, timer = 0;
+const fmt = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+
+function answer(){
+  show("incall");
+  vid.currentTime = 0;
+  vid.muted = false;
+  vid.play();   // inside the touch handler, so iOS allows sound
+  t0 = Date.now();
+  timer = setInterval(() => { $("#tm").textContent = fmt((Date.now() - t0) / 1000); }, 250);
+}
+function hangup(){
+  clearInterval(timer);
+  vid.pause();
+  $("#dur").textContent = "Call ended · " + fmt((Date.now() - t0) / 1000);
+  show("ended");
+}
+vid.addEventListener("ended", hangup);
+$("#hang").addEventListener("click", hangup);
+// Tap the ended screen to get the incoming call back (for another take).
+$("#ended").addEventListener("click", () => { resetKnob(); show("incoming"); });
+
+const knob = $("#knob"), slide = $("#slide");
+let x0 = 0, dx = 0, max = 0, dragging = false;
+function resetKnob(){ knob.style.transition = "transform .25s ease-out"; knob.style.transform = ""; slide.querySelector(".lab").style.opacity = 1; }
+knob.addEventListener("pointerdown", e => { dragging = true; x0 = e.clientX; dx = 0; max = slide.clientWidth - knob.clientWidth - 12; knob.style.transition = ""; knob.setPointerCapture(e.pointerId); });
+knob.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  dx = Math.max(0, Math.min(max, e.clientX - x0));
+  knob.style.transform = `translateX(${dx}px)`;
+  slide.querySelector(".lab").style.opacity = 1 - dx / max;
+});
+knob.addEventListener("pointerup", () => {
+  if (!dragging) return;
+  dragging = false;
+  if (dx > max * 0.65) answer(); else resetKnob();
+});
+document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+</script>
+</body>
+</html>
